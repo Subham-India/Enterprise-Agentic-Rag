@@ -2,3 +2,4 @@
 .env
 processed_data/
 __pycache__/
+flashrank_cache/
