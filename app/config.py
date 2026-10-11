@@ -24,6 +24,6 @@ class Settings:
     PORTKEY_CONFIG_ID = os.getenv("PORTKEY_CONFIG_ID")
     # Ingestion
     CHUNK_MAX_CHARS = 1500
-
+    GUARD_MODEL = "qwen/qwen3.8-27b"
 
 settings = Settings()

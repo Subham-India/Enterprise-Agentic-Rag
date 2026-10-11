@@ -1,10 +1,8 @@
-from langchain_core.messages import HumanMessage
-
 from app.agents.state import AgentState
 from app.gateway.client import get_llm
 
 PLANNER_PROMPT = """You are the routing step of a technical documentation assistant.
-The knowledge base covers Kubernetes: jobs, cron jobs, pod autoscaling (HPA/VPA), job monitoring, work queues and cluster architecture.
+The knowledge base covers: Kubernetes (jobs, cron jobs, pod autoscaling HPA/VPA, job monitoring, work queues, cluster architecture) and Databricks job automation (CLI, SDKs, REST API).
 
 Chat history:
 {history}
@@ -13,7 +11,7 @@ Latest user message: {question}
 
 Pick exactly one:
 - CHAT: only a greeting, thanks, or small talk about the assistant itself.
-- SEARCH: <a standalone search query>: any question about Kubernetes, containers or cloud infrastructure, even if it might not be covered in the knowledge base. The query must make sense without the chat history (replace words like "it" or "that" with what they refer to).
+- SEARCH: <a standalone search query>: any question about Kubernetes, Databricks jobs, containers or cloud infrastructure, even if it might not be covered in the knowledge base. The query must make sense without the chat history (replace words like "it" or "that" with what they refer to).
 - OFF_TOPIC: anything else (general knowledge, creative writing, personal advice, unrelated coding, news, math, and so on).
 
 Reply with one line only, starting with CHAT, SEARCH: or OFF_TOPIC."""

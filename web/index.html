@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kubernetes Docs Assistant</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="title">
+        <span class="logo">⎈</span>
+        <div>
+          <h1>Kubernetes Docs Assistant</h1>
+          <p>Jobs, cron jobs, autoscaling, monitoring and work queues</p>
+        </div>
+      </div>
+      <button id="new-chat" type="button">New chat</button>
+    </header>
+
+    <main id="chat" aria-live="polite"></main>
+
+    <form id="composer" autocomplete="off">
+      <textarea id="input" rows="1" maxlength="2000" placeholder="Ask a question..." required></textarea>
+      <button id="send" type="submit">Send</button>
+    </form>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
