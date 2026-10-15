@@ -1,0 +1,125 @@
+[
+  {
+    "id": 1,
+    "question": "How do you start Redis for a Kubernetes work queue?",
+    "file": "parallel_work_queue.txt",
+    "gold_chunks": [
+      "parallel_work_queue.txt#0",
+      "parallel_work_queue.txt#1"
+    ]
+  },
+  {
+    "id": 2,
+    "question": "What does the parallelism field do in the Kubernetes job-wq-2 manifest?",
+    "file": "parallel_work_queue.txt",
+    "gold_chunks": [
+      "parallel_work_queue.txt#0",
+      "parallel_work_queue.txt#2"
+    ]
+  },
+  {
+    "id": 3,
+    "question": "How do you fill the Redis work queue with tasks using the CLI?",
+    "file": "parallel_work_queue.txt",
+    "gold_chunks": [
+      "parallel_work_queue.txt#1"
+    ]
+  },
+  {
+    "id": 4,
+    "question": "What is the difference between HPA and VPA in Kubernetes?",
+    "file": "pods_autoscale.html",
+    "gold_chunks": [
+      "pods_autoscale.html#0",
+      "pods_autoscale.html#2"
+    ]
+  },
+  {
+    "id": 5,
+    "question": "How do you install the Metrics Server for Kubernetes pod autoscaling?",
+    "file": "pods_autoscale.html",
+    "gold_chunks": [
+      "pods_autoscale.html#1"
+    ]
+  },
+  {
+    "id": 6,
+    "question": "Which kubectl commands confirm that the Metrics Server is collecting data?",
+    "file": "pods_autoscale.html",
+    "gold_chunks": [
+      "pods_autoscale.html#1"
+    ]
+  },
+  {
+    "id": 7,
+    "question": "What Databricks CLI command retrieves the details of a specific job?",
+    "file": "job_management.html",
+    "gold_chunks": [
+      "job_management.html#1"
+    ]
+  },
+  {
+    "id": 8,
+    "question": "When should you use the Databricks REST API instead of the CLI or SDK?",
+    "file": "job_management.html",
+    "gold_chunks": [
+      "job_management.html#1"
+    ]
+  },
+  {
+    "id": 9,
+    "question": "What are the three main developer tools for managing Databricks jobs programmatically?",
+    "file": "job_management.html",
+    "gold_chunks": [
+      "job_management.html#0"
+    ]
+  },
+  {
+    "id": 10,
+    "question": "What are the valid restart policy values for a Kubernetes Job pod?",
+    "file": "cronjobs.docx",
+    "gold_chunks": [
+      "cronjobs.docx#0"
+    ]
+  },
+  {
+    "id": 11,
+    "question": "What are the completions and parallelism fields in a Kubernetes Job spec?",
+    "file": "cronjobs.docx",
+    "gold_chunks": [
+      "cronjobs.docx#1"
+    ]
+  },
+  {
+    "id": 12,
+    "question": "Which Kubernetes API group does a Job resource belong to?",
+    "file": "cronjobs.docx",
+    "gold_chunks": [
+      "cronjobs.docx#0"
+    ]
+  },
+  {
+    "id": 13,
+    "question": "How do you start a local Kubernetes cluster using Minikube?",
+    "file": "monitor_job.docx",
+    "gold_chunks": [
+      "monitor_job.docx#0"
+    ]
+  },
+  {
+    "id": 14,
+    "question": "What kubectl command checks the status of a running Kubernetes Job?",
+    "file": "monitor_job.docx",
+    "gold_chunks": [
+      "monitor_job.docx#2"
+    ]
+  },
+  {
+    "id": 15,
+    "question": "How do you verify that the core Kubernetes components are running after starting Minikube?",
+    "file": "monitor_job.docx",
+    "gold_chunks": [
+      "monitor_job.docx#1"
+    ]
+  }
+]

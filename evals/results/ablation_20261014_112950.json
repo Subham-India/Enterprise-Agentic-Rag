@@ -1,0 +1,150 @@
+{
+  "summary": {
+    "dense_top5": {
+      "hit": 0.8461538461538461,
+      "recall": 0.8076923076923077,
+      "MRR": 0.6461538461538462
+    },
+    "current_rerank_top5": {
+      "hit": 1.0,
+      "recall": 0.9615384615384616,
+      "MRR": 0.7564102564102563
+    },
+    "rerank_top8": {
+      "hit": 1.0,
+      "recall": 0.9615384615384616,
+      "MRR": 0.7564102564102563
+    },
+    "rerank_top10": {
+      "hit": 1.0,
+      "recall": 1.0,
+      "MRR": 0.7564102564102563
+    },
+    "rrf_top5": {
+      "hit": 0.9230769230769231,
+      "recall": 0.9230769230769231,
+      "MRR": 0.7756410256410257
+    }
+  },
+  "rows": [
+    {
+      "id": 2,
+      "gold": [
+        "parallel_work_queue.txt#0",
+        "parallel_work_queue.txt#2"
+      ],
+      "gold_dense_rank": 2,
+      "gold_rerank_rank": 1,
+      "in_current_top5": true
+    },
+    {
+      "id": 3,
+      "gold": [
+        "parallel_work_queue.txt#1"
+      ],
+      "gold_dense_rank": 1,
+      "gold_rerank_rank": 2,
+      "in_current_top5": true
+    },
+    {
+      "id": 4,
+      "gold": [
+        "pods_autoscale.html#0",
+        "pods_autoscale.html#2"
+      ],
+      "gold_dense_rank": 5,
+      "gold_rerank_rank": 2,
+      "in_current_top5": true
+    },
+    {
+      "id": 5,
+      "gold": [
+        "pods_autoscale.html#1"
+      ],
+      "gold_dense_rank": 1,
+      "gold_rerank_rank": 2,
+      "in_current_top5": true
+    },
+    {
+      "id": 6,
+      "gold": [
+        "pods_autoscale.html#1"
+      ],
+      "gold_dense_rank": 1,
+      "gold_rerank_rank": 1,
+      "in_current_top5": true
+    },
+    {
+      "id": 7,
+      "gold": [
+        "job_management.html#1"
+      ],
+      "gold_dense_rank": 1,
+      "gold_rerank_rank": 2,
+      "in_current_top5": true
+    },
+    {
+      "id": 8,
+      "gold": [
+        "job_management.html#1"
+      ],
+      "gold_dense_rank": 1,
+      "gold_rerank_rank": 1,
+      "in_current_top5": true
+    },
+    {
+      "id": 10,
+      "gold": [
+        "cronjobs.docx#0"
+      ],
+      "gold_dense_rank": 6,
+      "gold_rerank_rank": 1,
+      "in_current_top5": true
+    },
+    {
+      "id": 11,
+      "gold": [
+        "cronjobs.docx#1"
+      ],
+      "gold_dense_rank": 1,
+      "gold_rerank_rank": 3,
+      "in_current_top5": true
+    },
+    {
+      "id": 12,
+      "gold": [
+        "cronjobs.docx#0"
+      ],
+      "gold_dense_rank": 5,
+      "gold_rerank_rank": 1,
+      "in_current_top5": true
+    },
+    {
+      "id": 13,
+      "gold": [
+        "monitor_job.docx#0"
+      ],
+      "gold_dense_rank": 2,
+      "gold_rerank_rank": 1,
+      "in_current_top5": true
+    },
+    {
+      "id": 14,
+      "gold": [
+        "monitor_job.docx#2"
+      ],
+      "gold_dense_rank": 11,
+      "gold_rerank_rank": 2,
+      "in_current_top5": true
+    },
+    {
+      "id": 15,
+      "gold": [
+        "monitor_job.docx#1"
+      ],
+      "gold_dense_rank": 1,
+      "gold_rerank_rank": 1,
+      "in_current_top5": true
+    }
+  ]
+}

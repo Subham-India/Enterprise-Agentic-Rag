@@ -1,0 +1,497 @@
+{
+  "summary": {
+    "questions": 15,
+    "errors": 0,
+    "judge_parse_failures": 0,
+    "faithfulness_mean": 4.73,
+    "correctness_mean": 4.73,
+    "faithfulness_ge4": 1.0,
+    "correctness_ge4": 0.93,
+    "context_sufficient_yes": 0.8,
+    "judge_model": "qwen/qwen3.8-27b"
+  },
+  "rows": [
+    {
+      "id": 1,
+      "question": "How do you start Redis for a Kubernetes work queue?",
+      "answer": "You start Redis by deploying the example Redis pod and service manifests into your cluster.  \nRun the following commands:\n\n```bash\nkubectl apply -f https://k8s.io/examples/application/job/redis/redis-pod.yaml\nkubectl apply -f https://k8s.io/examples/application/job/redis/redis-service.yaml\n```\n\nThese create a single Redis instance that the worker pods can connect to for the work queue. The pod provides the Redis server, and the service exposes it so the workers can reach it by the name `redis` inside the cluster. [4]",
+      "reference": "Run kubectl apply -f https://k8s.io/examples/application/job/redis/redis-pod.yaml and kubectl apply -f https://k8s.io/examples/application/job/redis/redis-service.yaml to start a single Redis instance for the work queue.",
+      "retrieved": [
+        "parallel_work_queue.txt#0",
+        "parallel_work_queue.txt#2",
+        "monitor_job.docx#0",
+        "parallel_work_queue.txt#1",
+        "monitor_job.docx#2"
+      ],
+      "faithfulness": 4,
+      "faithfulness_detail": {
+        "score": 4,
+        "unsupported_claims": [
+          "The pod provides the Redis server, and the service exposes it so the workers can reach it by the name `redis` inside the cluster."
+        ],
+        "reason": "The specific commands and the fact that a single Redis instance is started are supported by the context, but the detailed explanation of how the pod and service function (exposing the name 'redis' for workers) is not explicitly stated in the provided text snippets, although it is implied by the worker script using host='redis'."
+      },
+      "correctness": 5,
+      "correctness_detail": {
+        "score": 5,
+        "missing": [],
+        "reason": "The answer provides the exact same commands and context as the reference answer."
+      },
+      "context_sufficient": "yes",
+      "sufficiency_detail": {
+        "verdict": "yes",
+        "reason": "The context in section [4] explicitly lists the exact kubectl commands to apply the redis-pod.yaml and redis-service.yaml files, and section [1] confirms that this step is for starting a single instance of Redis for the work queue."
+      },
+      "error": null
+    },
+    {
+      "id": 2,
+      "question": "What does the parallelism field do in the Kubernetes job-wq-2 manifest?",
+      "answer": "The parallelism field limits how many Pods the Job can run at the same time. It sets the maximum number of worker Pods that may be active concurrently while the Job is still running. This controls the degree of parallel execution for the Job\u2019s workload. [5]",
+      "reference": "The parallelism field is set to 2 in the job-wq-2 manifest, meaning a maximum of 2 Pods run simultaneously. Each pod picks up one unit of work from the Redis queue, processes it, and repeats until the queue is empty.",
+      "retrieved": [
+        "parallel_work_queue.txt#0",
+        "monitor_job.docx#10",
+        "monitor_job.docx#0",
+        "cronjobs.docx#0",
+        "cronjobs.docx#1"
+      ],
+      "faithfulness": 5,
+      "faithfulness_detail": {
+        "score": 5,
+        "unsupported_claims": [],
+        "reason": "The context explicitly states that the parallelism field controls the maximum concurrent Pods, which directly supports the answer's claims about limiting simultaneous Pod execution and controlling parallelism."
+      },
+      "correctness": 3,
+      "correctness_detail": {
+        "score": 3,
+        "missing": [
+          "specific value (2)",
+          "context of Redis queue processing"
+        ],
+        "reason": "The answer correctly explains the general function of the parallelism field but fails to mention the specific value (2) and the context of the Redis queue processing provided in the reference."
+      },
+      "context_sufficient": "partial",
+      "sufficiency_detail": {
+        "verdict": "partial",
+        "reason": "The context explains the general concept of parallelism and the work queue mechanism (picking up units of work from Redis), but it does not contain the specific information that the 'job-wq-2' manifest sets the parallelism field to 2."
+      },
+      "error": null,
+      "failure_type": "retrieval (context lacked the answer)"
+    },
+    {
+      "id": 3,
+      "question": "How do you fill the Redis work queue with tasks using the CLI?",
+      "answer": "You can fill the Redis work queue by launching a temporary Redis client pod and using the Redis CLI to push items onto the queue.\n\n1. Start a temporary interactive pod that runs the Redis CLI:\n   ```kubectl run -i --tty temp --image redis --command \"/bin/sh\"```\n   [2]\n\n2. Inside the pod, connect to the Redis service:\n   ```redis-cli -h redis```\n   [2]\n\n3. Push each task onto the queue named `job2` with the `RPUSH` command:\n   ```redis-cli\n   rpush job2 \"apple\"\n   rpush job2 \"banana\"\n   rpush job2 \"cherry\"\n   rpush job2 \"date\"\n   rpush job2 \"fig\"\n   rpush job2 \"grape\"\n   rpush job2 \"lemon\"\n   rpush job2 \"melon\"\n   rpush job2 \"orange\"\n   ```\n   [3]\n\n4. (Optional) Verify the queue contents:\n   ```redis-cli\n   lrange job2 0 -1\n   ```\n   [3]",
+      "reference": "Start a temporary interactive pod with kubectl run -i --tty temp --image redis --command \"/bin/sh\", connect to Redis using redis-cli -h redis, then push tasks using rpush job2 followed by the task name (e.g. rpush job2 \"apple\"). Use lrange job2 0 -1 to verify the queue contents.",
+      "retrieved": [
+        "parallel_work_queue.txt#0",
+        "parallel_work_queue.txt#1",
+        "parallel_work_queue.txt#2",
+        "job_management.html#3",
+        "job_management.html#0"
+      ],
+      "faithfulness": 5,
+      "faithfulness_detail": {
+        "score": 5,
+        "unsupported_claims": [],
+        "reason": "All steps and commands described in the answer are directly supported by the context provided in sections [2] and [3]."
+      },
+      "correctness": 5,
+      "correctness_detail": {
+        "score": 5,
+        "missing": [],
+        "reason": "The answer contains all the key commands and steps from the reference, including the kubectl run command, redis-cli connection, rpush examples, and lrange verification."
+      },
+      "context_sufficient": "yes",
+      "sufficiency_detail": {
+        "verdict": "yes",
+        "reason": "The context in section [2] explicitly contains the commands for starting the temporary pod, connecting to Redis, pushing tasks with rpush, and verifying the queue with lrange."
+      },
+      "error": null
+    },
+    {
+      "id": 4,
+      "question": "What is the difference between HPA and VPA in Kubernetes?",
+      "answer": "HPA scales the number of pods in a deployment, while VPA adjusts the CPU and memory requests of individual pods.\n\nHPA monitors metrics such as CPU or custom metrics and compares them to thresholds; when usage exceeds the threshold it adds pods, and when it falls below it removes pods. This horizontal scaling is ideal for stateless applications that can run many replicas and for workloads that need to handle variable traffic [2].  \n\nVPA, on the other hand, keeps the pod count fixed and instead changes the resource requests of the containers inside those pods so that each pod uses the right amount of CPU and memory. It is useful when horizontal scaling is not feasible, for stateful workloads, or when you want to optimize resource usage per pod. VPA can also exclude specific containers from scaling by setting their mode to \u201cOff\u201d in the VPA resource policy [4].  \n\nIn short, use HPA when you need to add or remove replicas to meet load, and use VPA when you need to fine\u2011tune the resource limits of existing pods.",
+      "reference": "HPA (Horizontal Pod Autoscaler) scales the number of pod replicas up or down based on CPU or custom metrics. VPA (Vertical Pod Autoscaler) adjusts the CPU and memory resource requests and limits for existing pods. HPA adds or removes pods; VPA resizes the resources of existing pods.",
+      "retrieved": [
+        "pods_autoscale.html#13",
+        "pods_autoscale.html#2",
+        "pods_autoscale.html#0",
+        "pods_autoscale.html#12",
+        "pods_autoscale.html#7"
+      ],
+      "faithfulness": 5,
+      "faithfulness_detail": {
+        "score": 5,
+        "unsupported_claims": [],
+        "reason": "All claims regarding HPA's mechanism (scaling pod count based on metrics), VPA's mechanism (adjusting resource requests), their respective use cases (stateless vs stateful/optimization), and VPA's exclusion feature are directly supported by the provided context."
+      },
+      "correctness": 5,
+      "correctness_detail": {
+        "score": 5,
+        "missing": [],
+        "reason": "The answer correctly identifies that HPA scales the number of pods based on metrics and VPA adjusts CPU/memory resources for existing pods, covering all key facts from the reference."
+      },
+      "context_sufficient": "yes",
+      "sufficiency_detail": {
+        "verdict": "yes",
+        "reason": "The context explicitly states that HPA scales the number of pods based on CPU or other metrics, and that VPA adjusts CPU and memory requests for existing pods, covering all key facts in the reference."
+      },
+      "error": null
+    },
+    {
+      "id": 5,
+      "question": "How do you install the Metrics Server for Kubernetes pod autoscaling?",
+      "answer": "The Metrics Server can be installed by applying its latest YAML manifest with\u202fkubectl\u202fand then verifying that the pods are running and metrics are being collected.  \n\nThe process works as follows: you download the manifest from the Metrics Server GitHub releases, apply it to your cluster, confirm the pods in the\u202fkube-system\u202fnamespace are ready, and then check that node and pod metrics are available.  \n\nSteps  \n\n1. Apply the latest Metrics Server manifest  \n   ```  \n   kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml  \n   ```  \n   This fetches the YAML from the GitHub repository and deploys the Metrics Server components into your cluster.  \n\n2. Verify that the Metrics Server pods are running  \n   ```  \n   kubectl get pods -n kube-system | grep metrics-server  \n   ```  \n   You should see one or more pods with names containing\u202fmetrics-server\u202fand a\u202fSTATUS\u202fof\u202fRunning.  \n\n3. Confirm that metrics are being collected  \n   ```  \n   kubectl top nodes  \n   kubectl top pods --all-namespaces  \n   ```  \n   These commands should display CPU and memory usage for nodes and pods, indicating that the Metrics Server is functioning correctly.  \n\nThese steps install and validate the Metrics Server, enabling HPA and VPA to use cluster metrics for autoscaling decisions. [2]",
+      "reference": "Run kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml to install the Metrics Server. Then verify the installation with kubectl get pods -n kube-system | grep metrics-server.",
+      "retrieved": [
+        "pods_autoscale.html#2",
+        "pods_autoscale.html#1",
+        "pods_autoscale.html#0",
+        "pods_autoscale.html#7",
+        "pods_autoscale.html#13"
+      ],
+      "faithfulness": 5,
+      "faithfulness_detail": {
+        "score": 5,
+        "unsupported_claims": [],
+        "reason": "All steps, commands, and verification methods described in the answer are explicitly supported by Context [2]."
+      },
+      "correctness": 5,
+      "correctness_detail": {
+        "score": 5,
+        "missing": [],
+        "reason": "The answer contains the exact installation command and verification command specified in the reference, along with additional valid verification steps that do not contradict the reference."
+      },
+      "context_sufficient": "yes",
+      "sufficiency_detail": {
+        "verdict": "yes",
+        "reason": "The context explicitly provides the exact commands for installing the Metrics Server via kubectl apply and verifying the installation by checking pods in the kube-system namespace."
+      },
+      "error": null
+    },
+    {
+      "id": 6,
+      "question": "Which kubectl commands confirm that the Metrics Server is collecting data?",
+      "answer": "The Metrics Server is confirmed to be collecting data by running the following kubectl commands:\n\n1. `kubectl top nodes` \u2013 displays CPU and memory usage for each node.  \n2. `kubectl top pods --all-namespaces` \u2013 shows CPU and memory usage for every pod across all namespaces.  \n\nThese commands query the Metrics Server API; if they return usage metrics, the server is actively collecting and serving data. [1]",
+      "reference": "Run kubectl top nodes and kubectl top pods --all-namespaces. If the Metrics Server is properly installed and functioning, both commands return CPU and memory usage metrics for the nodes and pods in the cluster.",
+      "retrieved": [
+        "pods_autoscale.html#1",
+        "pods_autoscale.html#2",
+        "monitor_job.docx#1",
+        "monitor_job.docx#8"
+      ],
+      "faithfulness": 5,
+      "faithfulness_detail": {
+        "score": 5,
+        "unsupported_claims": [],
+        "reason": "The answer accurately reflects the commands and their purpose as described in context [1], which states that running 'kubectl top nodes' and 'kubectl top pods --all-namespaces' confirms the Metrics Server is collecting metrics."
+      },
+      "correctness": 5,
+      "correctness_detail": {
+        "score": 5,
+        "missing": [],
+        "reason": "The answer correctly identifies the two specific kubectl commands and explains that they return CPU and memory metrics, which matches the reference exactly."
+      },
+      "context_sufficient": "yes",
+      "sufficiency_detail": {
+        "verdict": "yes",
+        "reason": "Context [1] explicitly lists the commands 'kubectl top nodes' and 'kubectl top pods --all-namespaces' and states that if the Metrics Server is functioning, they return CPU and memory usage metrics for nodes and pods."
+      },
+      "error": null
+    },
+    {
+      "id": 7,
+      "question": "What Databricks CLI command retrieves the details of a specific job?",
+      "answer": "The Databricks CLI command that retrieves the details of a specific job is:\n\n`databricks jobs get <job-id>`.\n\nThis command maps to the REST API call `GET /api/2.2/jobs/get` and returns the job\u2019s configuration and metadata in JSON format.  \n\nSteps to use it:\n\n1. Open a terminal where the Databricks CLI is installed and authenticated.  \n2. Replace `<job-id>` with the numeric ID of the job you want to inspect.  \n3. Run the command:\n\n```\ndatabricks jobs get <job-id>\n```\n\nThe CLI will output the job details in JSON, allowing you to review its settings or use the information in scripts or automation workflows. [2]",
+      "reference": "Use databricks jobs get <job-id>. For example, databricks jobs get 478701692316314 returns the full JSON configuration of that job including its settings, creator username, task definitions, and max concurrent runs.",
+      "retrieved": [
+        "job_management.html#5",
+        "job_management.html#1",
+        "job_management.html#3",
+        "job_management.html#6",
+        "job_management.html#0"
+      ],
+      "faithfulness": 5,
+      "faithfulness_detail": {
+        "score": 5,
+        "unsupported_claims": [],
+        "reason": "The answer correctly identifies the CLI command, its mapping to the REST API endpoint, and the JSON output format, all of which are explicitly supported by context [2]."
+      },
+      "correctness": 5,
+      "correctness_detail": {
+        "score": 5,
+        "missing": [],
+        "reason": "The answer correctly identifies the command `databricks jobs get <job-id>` and accurately describes the output as JSON configuration/metadata, matching the reference facts."
+      },
+      "context_sufficient": "partial",
+      "sufficiency_detail": {
+        "verdict": "partial",
+        "reason": "The context provides the command syntax and example ID but does not explicitly state that the output includes the creator username, task definitions, or max concurrent runs."
+      },
+      "error": null
+    },
+    {
+      "id": 8,
+      "question": "When should you use the Databricks REST API instead of the CLI or SDK?",
+      "answer": "Use the Databricks REST API when you need to automate or integrate Databricks operations in a programming language that does not have a Databricks SDK, or when the CLI and SDK do not provide the functionality you require.  \n\nThe REST API is the lowest\u2011level interface and can be called from any language that can make HTTP requests. It is recommended only when a suitable SDK is unavailable or when you need to perform custom calls that the CLI or SDK do not expose.  \n\nTypical scenarios for using the REST API directly include:  \n1. Automating processes in a language without a Databricks SDK.  \n2. Performing advanced or custom API calls that are not wrapped by the CLI or SDK.  \n\nExample of a REST API call to get job details (requires `DATABRICKS_HOST` and `DATABRICKS_TOKEN` environment variables):  \n\n```\n$ curl --request GET \"https://${DATABRICKS_HOST}/api/2.2/jobs/get\" \\\n     --header \"Authorization: Bearer ${DATABRICKS_TOKEN}\" \\\n     --data '{ \"job\": \"11223344\" }'\n```\n\nThis approach is documented in the REST API reference and is recommended only when the CLI or SDK cannot meet your needs. [1][2]",
+      "reference": "Use the Databricks REST API directly when none of the supported SDK languages (Python, Java, Go, R) are available for your use case, or when you need to automate processes for which no SDK currently exists in your preferred programming language.",
+      "retrieved": [
+        "job_management.html#1",
+        "job_management.html#5",
+        "job_management.html#0",
+        "job_management.html#6",
+        "job_management.html#3"
+      ],
+      "faithfulness": 4,
+      "faithfulness_detail": {
+        "score": 4,
+        "unsupported_claims": [
+          "It is recommended only when a suitable SDK is unavailable or when you need to perform custom calls that the CLI or SDK do not expose."
+        ],
+        "reason": "The context states that Databricks recommends using the CLI and SDK *unless* you are using a language without an SDK, but it does not explicitly state that the REST API is recommended *only* for cases where the CLI/SDK do not expose the functionality, nor does it explicitly define it as the 'lowest-level interface' in those specific terms, though the general advice aligns with the context's recommendation to use CLI/SDK first."
+      },
+      "correctness": 5,
+      "correctness_detail": {
+        "score": 5,
+        "missing": [],
+        "reason": "The answer correctly identifies the key scenarios for using the REST API (lack of SDK support or need for custom functionality) which aligns perfectly with the reference, and provides additional helpful context and examples without contradicting the core facts."
+      },
+      "context_sufficient": "yes",
+      "sufficiency_detail": {
+        "verdict": "yes",
+        "reason": "The context explicitly states to use the REST API for use cases where an SDK in your preferred programming language is not currently available, and lists Python, Java, Go, and R as the available SDK languages."
+      },
+      "error": null
+    },
+    {
+      "id": 9,
+      "question": "What are the three main developer tools for managing Databricks jobs programmatically?",
+      "answer": "The three main developer tools for managing Databricks jobs programmatically are the Databricks CLI, the Databricks SDKs, and the Databricks REST API.  \n\nThe Databricks CLI is a command\u2011line interface that wraps the REST API, allowing one\u2011off tasks, shell scripting, and direct API calls. The Databricks SDKs provide language\u2011specific libraries (Python, Java, Go, R) that let you build custom applications and workflows without writing raw HTTP requests. The Databricks REST API is the underlying HTTP interface that all three tools use, and it can be called directly when an SDK is not available for your language. [1]",
+      "reference": "The three tools are: (1) Databricks CLI \u2014 wraps the REST API, used for one-off tasks and shell scripting; (2) Databricks SDKs \u2014 for building applications in Python, Java, Go, or R; (3) Databricks REST API \u2014 used directly when no SDK is available for your language.",
+      "retrieved": [
+        "job_management.html#0",
+        "job_management.html#3",
+        "job_management.html#6",
+        "job_management.html#1",
+        "job_management.html#5"
+      ],
+      "faithfulness": 4,
+      "faithfulness_detail": {
+        "score": 4,
+        "unsupported_claims": [
+          "The Databricks REST API is the underlying HTTP interface that all three tools use"
+        ],
+        "reason": "The context states that the CLI wraps the REST API and SDKs interact with Databricks (implying the API), but it does not explicitly state that the REST API is the underlying interface for the SDKs, only that the CLI wraps it."
+      },
+      "correctness": 5,
+      "correctness_detail": {
+        "score": 5,
+        "missing": [],
+        "reason": "The answer correctly identifies all three tools (CLI, SDKs, REST API) and accurately describes their specific use cases and supported languages, matching the reference details perfectly."
+      },
+      "context_sufficient": "yes",
+      "sufficiency_detail": {
+        "verdict": "yes",
+        "reason": "The context explicitly lists the three tools and their descriptions, matching the reference answer's details about the CLI wrapping the REST API for one-off tasks, SDKs supporting Python/Java/Go/R, and the REST API being used when no SDK is available."
+      },
+      "error": null
+    },
+    {
+      "id": 10,
+      "question": "What are the valid restart policy values for a Kubernetes Job pod?",
+      "answer": "The valid restart policy values for a Kubernetes Job pod are **OnFailure** and **Never**.  \n\nThese are the only policies allowed for Job pods; the **Always** policy is disallowed because it would prevent the pod from ever completing successfully. [1]",
+      "reference": "A Kubernetes Job supports two valid restart policies: OnFailure (the kubelet restarts the container within the same pod if it crashes) and Never (the pod is marked as failed and the Job controller creates a new pod). The Always policy is not allowed because it would prevent pods from ever completing.",
+      "retrieved": [
+        "cronjobs.docx#0",
+        "cronjobs.docx#25",
+        "monitor_job.docx#2",
+        "cronjobs.docx#5",
+        "cronjobs.docx#21"
+      ],
+      "faithfulness": 5,
+      "faithfulness_detail": {
+        "score": 5,
+        "unsupported_claims": [],
+        "reason": "The answer accurately reflects the restart policy requirements (OnFailure, Never allowed; Always disallowed) and the reasoning provided in context [1]."
+      },
+      "correctness": 4,
+      "correctness_detail": {
+        "score": 4,
+        "missing": [
+          "Explanation of what OnFailure does (kubelet restarts container within same pod)",
+          "Explanation of what Never does (pod marked failed, Job controller creates new pod)"
+        ],
+        "reason": "The answer correctly identifies the valid values (OnFailure, Never) and the invalid one (Always) with the correct reasoning, but it omits the specific behavioral details for each valid policy provided in the reference."
+      },
+      "context_sufficient": "yes",
+      "sufficiency_detail": {
+        "verdict": "yes",
+        "reason": "Context [1] explicitly lists the restart policy requirements for Kubernetes Jobs, detailing the behavior of OnFailure and Never, and stating that Always is not allowed because it would prevent the Pod from completing."
+      },
+      "error": null
+    },
+    {
+      "id": 11,
+      "question": "What are the completions and parallelism fields in a Kubernetes Job spec?",
+      "answer": "A Kubernetes Job spec uses the **completions** field to set how many Pods must finish successfully before the Job is considered complete, and the **parallelism** field to limit how many of those Pods may run at the same time.  \n\nIn the Job manifest the two fields appear under `spec`:\n\n```\nspec:\n  completions: 5      # Job completes after 5 successful Pod completions\n  parallelism: 3      # Max 3 Pods running simultaneously\n```\n\nThe `completions` value tells the Job controller to keep creating Pods until that many have succeeded. The `parallelism` value caps the number of Pods that can be active concurrently, so if you set `parallelism: 3` and `completions: 5`, the controller will run up to three Pods at once and will start a new one as each finishes, until five successful completions are reached.  \n\nThese fields are described in the guide as controlling the Job\u2019s execution flow and are part of the `batch/v1` API group for Jobs. [3] [5]",
+      "reference": "completions specifies how many pods must successfully complete before the Job is considered done (e.g., completions: 5 requires 5 successful completions). parallelism controls the maximum number of pods that can run at the same time (e.g., parallelism: 3 allows up to 3 concurrent pods).",
+      "retrieved": [
+        "cronjobs.docx#0",
+        "monitor_job.docx#0",
+        "cronjobs.docx#1",
+        "monitor_job.docx#10",
+        "architecture.pptx#6"
+      ],
+      "faithfulness": 5,
+      "faithfulness_detail": {
+        "score": 5,
+        "unsupported_claims": [],
+        "reason": "All claims regarding the 'completions' and 'parallelism' fields, their definitions, example values, and the API group are directly supported by the provided context in documents [3] and [5]."
+      },
+      "correctness": 5,
+      "correctness_detail": {
+        "score": 5,
+        "missing": [],
+        "reason": "The answer correctly defines both fields with the same examples and logic as the reference, providing accurate and complete information."
+      },
+      "context_sufficient": "yes",
+      "sufficiency_detail": {
+        "verdict": "yes",
+        "reason": "The context explicitly defines 'completions' as the number of Pods that must successfully complete and 'parallelism' as the control for maximum concurrent Pods, matching the reference answer."
+      },
+      "error": null
+    },
+    {
+      "id": 12,
+      "question": "Which Kubernetes API group does a Job resource belong to?",
+      "answer": "A Job resource belongs to the batch/v1 API group.  \nThe guide states that Jobs are part of the stable batch/v1 API group, and the Pod template for a Job cannot be modified after creation. [1]",
+      "reference": "Kubernetes Jobs belong to the batch/v1 API group, which is a stable API. The pod template within a Job is immutable and cannot be modified after the Job is created.",
+      "retrieved": [
+        "cronjobs.docx#0",
+        "monitor_job.docx#10",
+        "cronjobs.docx#7",
+        "monitor_job.docx#8",
+        "monitor_job.docx#1"
+      ],
+      "faithfulness": 5,
+      "faithfulness_detail": {
+        "score": 5,
+        "unsupported_claims": [],
+        "reason": "The answer correctly identifies that Jobs belong to the batch/v1 API group and that the Pod template is immutable, both of which are explicitly stated in context [1]."
+      },
+      "correctness": 5,
+      "correctness_detail": {
+        "score": 5,
+        "missing": [],
+        "reason": "The answer correctly identifies the batch/v1 API group and includes the additional detail about the immutable pod template, matching all key facts in the reference."
+      },
+      "context_sufficient": "yes",
+      "sufficiency_detail": {
+        "verdict": "yes",
+        "reason": "Context [1] explicitly states that Jobs belong to the batch/v1 API group (stable) and that the Pod template cannot be modified after Job creation."
+      },
+      "error": null
+    },
+    {
+      "id": 13,
+      "question": "How do you start a local Kubernetes cluster using Minikube?",
+      "answer": "Start the cluster by running the Minikube start command with a driver, for example Docker:  \n\n```  \nminikube start --driver=docker  \n```  \n\nThis command downloads the necessary components, creates a single\u2011node Kubernetes cluster, and configures kubectl to use it by default [1][2]. After the command completes, you can verify the cluster is running with `kubectl get nodes` and `kubectl get pods -n kube-system`.",
+      "reference": "Run minikube start --driver=docker. This creates a single-node Kubernetes cluster on your local machine using Docker. After it completes, kubectl is automatically configured to use the minikube cluster and default namespace.",
+      "retrieved": [
+        "monitor_job.docx#0",
+        "monitor_job.docx#1",
+        "pods_autoscale.html#7",
+        "parallel_work_queue.txt#0",
+        "monitor_job.docx#9"
+      ],
+      "faithfulness": 5,
+      "faithfulness_detail": {
+        "score": 5,
+        "unsupported_claims": [],
+        "reason": "All claims regarding the Minikube start command, its function (downloading components, creating a single-node cluster), and the subsequent verification steps are explicitly supported by the provided context."
+      },
+      "correctness": 5,
+      "correctness_detail": {
+        "score": 5,
+        "missing": [],
+        "reason": "The answer provides the exact command and driver specified in the reference, correctly explains the outcome (single-node cluster, kubectl configuration), and adds helpful verification steps without contradicting the reference."
+      },
+      "context_sufficient": "yes",
+      "sufficiency_detail": {
+        "verdict": "yes",
+        "reason": "The context explicitly states the command 'minikube start --driver=docker' and confirms that kubectl is configured to use the minikube cluster and default namespace upon completion."
+      },
+      "error": null
+    },
+    {
+      "id": 14,
+      "question": "What kubectl command checks the status of a running Kubernetes Job?",
+      "answer": "The kubectl command that checks the status of a running Kubernetes Job is:\n\nkubectl get jobs\n\nThis command lists all jobs in the current namespace and shows their completion status, duration, and age, allowing you to see whether a job has finished successfully or is still running. It is the primary tool for monitoring job status in Kubernetes.",
+      "reference": "Use kubectl get jobs to see the COMPLETIONS, DURATION, and AGE of all jobs. For more details on a specific job, use kubectl describe jobs/<job-name>. To view logs from a completed pod, use kubectl logs pods/<pod-name>.",
+      "retrieved": [
+        "monitor_job.docx#1",
+        "monitor_job.docx#2",
+        "monitor_job.docx#5",
+        "monitor_job.docx#0",
+        "monitor_job.docx#4"
+      ],
+      "faithfulness": 5,
+      "faithfulness_detail": {
+        "score": 5,
+        "unsupported_claims": [],
+        "reason": "The answer correctly identifies the command 'kubectl get jobs' and accurately describes its output (completions, duration, age) and purpose (monitoring status) as explicitly stated in context [2]."
+      },
+      "correctness": 4,
+      "correctness_detail": {
+        "score": 4,
+        "missing": [
+          "kubectl describe jobs/<job-name>",
+          "kubectl logs pods/<pod-name>"
+        ],
+        "reason": "The answer correctly identifies the primary command 'kubectl get jobs' and its output fields, but omits the additional commands for detailed inspection and log viewing provided in the reference."
+      },
+      "context_sufficient": "partial",
+      "sufficiency_detail": {
+        "verdict": "partial",
+        "reason": "The context contains information on using 'kubectl get jobs' and 'kubectl logs <pod-name>', but it does not mention the 'kubectl describe jobs/<job-name>' command required for the reference answer."
+      },
+      "error": null
+    },
+    {
+      "id": 15,
+      "question": "How do you verify that the core Kubernetes components are running after starting Minikube?",
+      "answer": "You can verify that the core Kubernetes components are running by listing the pods in the `kube-system` namespace.  \nRun the following command:  \n\n```bash\nkubectl get pods -n kube-system\n```\n\nThis will display all pods in the `kube-system` namespace, where you should see the core components such as `kube-apiserver`, `kube-controller-manager`, `kube-scheduler`, and others running. The presence and \u201cRunning\u201d status of these pods confirm that the core Kubernetes components are up and operational. [1]",
+      "reference": "Run kubectl get pods -n kube-system. This lists all pods in the kube-system namespace, which includes critical components like kube-apiserver, kube-controller-manager, and others. All listed pods should show a Running status.",
+      "retrieved": [
+        "monitor_job.docx#1",
+        "monitor_job.docx#0",
+        "pods_autoscale.html#1",
+        "architecture.pptx#1",
+        "monitor_job.docx#9"
+      ],
+      "faithfulness": 4,
+      "faithfulness_detail": {
+        "score": 4,
+        "unsupported_claims": [
+          "the presence and \u201cRunning\u201d status of these pods confirm that the core Kubernetes components are up and operational"
+        ],
+        "reason": "The context supports the command and the list of components to look for, but it does not explicitly state that the 'Running' status confirms the components are 'up and operational' (it only says you should see them running)."
+      },
+      "correctness": 5,
+      "correctness_detail": {
+        "score": 5,
+        "missing": [],
+        "reason": "The answer provides the exact command and correctly identifies the namespace and expected status, matching all key facts in the reference."
+      },
+      "context_sufficient": "yes",
+      "sufficiency_detail": {
+        "verdict": "yes",
+        "reason": "The context explicitly mentions running 'kubectl get pods -n kube-system' and states that one should see several pods running, including components like kube-apiserver and kube-controller-manager."
+      },
+      "error": null
+    }
+  ]
+}
