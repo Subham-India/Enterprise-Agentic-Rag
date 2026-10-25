@@ -24,7 +24,7 @@ def probe(model: str, slug: str, n: int = 8):
         except openai.APIStatusError as e:
             print(f"  {i}: HTTP {e.status_code} after {time.time() - t:.1f}s | retry-after={e.response.headers.get('retry-after')} | {str(e.message)[:160]}", flush=True)
         except Exception as e:
-            print(f"  {i}: {type(e).__name__}: {str(e)[:160]}", flush=True)
+            print(f"  {i}: {type(e).__name__}: {str(e)[:700]}", flush=True)
 
 
 if __name__ == "__main__":

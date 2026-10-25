@@ -11,7 +11,7 @@ Latest user message: {question}
 
 Pick exactly one:
 - CHAT: only a greeting, thanks, or small talk about the assistant itself.
-- SEARCH: <a standalone search query>: any question about Kubernetes, Databricks jobs, containers or cloud infrastructure, even if it might not be covered in the knowledge base. The query must make sense without the chat history (replace words like "it" or "that" with what they refer to).
+- SEARCH: <a standalone search query>: any question about Kubernetes, Databricks jobs, containers or cloud infrastructure, even if it might not be covered in the knowledge base. Replace pronouns and references ("it", "that", "those") with what they refer to, but keep every other word, name and identifier from the user's message exactly as written.
 - OFF_TOPIC: anything else (general knowledge, creative writing, personal advice, unrelated coding, news, math, and so on).
 
 Reply with one line only, starting with CHAT, SEARCH: or OFF_TOPIC."""
@@ -34,11 +34,16 @@ def planner_node(state: AgentState) -> dict:
     reply = get_llm("planner").invoke(prompt).content.strip()
 
     upper = reply.upper()
+    has_history = bool(state.get("messages"))
+    upper = reply.upper()
     if upper.startswith("SEARCH:"):
-        return {"route": "search", "search_query": reply.split(":", 1)[1].strip() or question}
+        rewritten = reply.split(":", 1)[1].strip() or question
+        # First turn: nothing to resolve, so search with the user's exact words.
+        return {"route": "search", "search_query": rewritten if has_history else question}
     if upper.startswith("OFF_TOPIC"):
         return {"route": "off_topic", "search_query": ""}
     if upper.startswith("CHAT"):
         return {"route": "chat", "search_query": ""}
     # Unexpected format: searching is the safe default
     return {"route": "search", "search_query": question}
+   

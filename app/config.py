@@ -14,7 +14,7 @@ class Settings:
     QDRANT_URL = os.getenv("QDRANT_CLUSTER_ENDPOINT")
     QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
     QDRANT_COLLECTION = "enterprise_rag"
-
+    QDRANT_HYBRID_COLLECTION = "enterprise_rag_hybrid"
     # LLM gateway
     PORTKEY_API_KEY = os.getenv("PORTKEY_API_KEY")
     GROQ_SLUG = os.getenv("GROQ_SLUG", "rag1")

@@ -1,0 +1,173 @@
+{
+  "summary": {
+    "dense_top5": {
+      "hit": 0.8666666666666667,
+      "recall": 0.8333333333333334,
+      "MRR": 0.6933333333333332
+    },
+    "dense_rerank_top5 (current)": {
+      "hit": 1.0,
+      "recall": 0.9666666666666667,
+      "MRR": 0.788888888888889
+    },
+    "hybrid_top5": {
+      "hit": 1.0,
+      "recall": 1.0,
+      "MRR": 0.9
+    },
+    "hybrid_rerank_top5": {
+      "hit": 1.0,
+      "recall": 0.9666666666666667,
+      "MRR": 0.7555555555555554
+    },
+    "hybrid_rerank_top10": {
+      "hit": 1.0,
+      "recall": 1.0,
+      "MRR": 0.7555555555555554
+    }
+  },
+  "pool_recall": {
+    "dense": 1.0,
+    "hybrid": 1.0
+  },
+  "rows": [
+    {
+      "id": 1,
+      "gold": [
+        "parallel_work_queue.txt#0",
+        "parallel_work_queue.txt#1"
+      ],
+      "gold_rank_dense": 1,
+      "gold_rank_hybrid": 1,
+      "gold_rank_hybrid_reranked": 1
+    },
+    {
+      "id": 2,
+      "gold": [
+        "parallel_work_queue.txt#0",
+        "parallel_work_queue.txt#2"
+      ],
+      "gold_rank_dense": 2,
+      "gold_rank_hybrid": 1,
+      "gold_rank_hybrid_reranked": 1
+    },
+    {
+      "id": 3,
+      "gold": [
+        "parallel_work_queue.txt#1"
+      ],
+      "gold_rank_dense": 1,
+      "gold_rank_hybrid": 1,
+      "gold_rank_hybrid_reranked": 2
+    },
+    {
+      "id": 4,
+      "gold": [
+        "pods_autoscale.html#0",
+        "pods_autoscale.html#2"
+      ],
+      "gold_rank_dense": 5,
+      "gold_rank_hybrid": 2,
+      "gold_rank_hybrid_reranked": 2
+    },
+    {
+      "id": 5,
+      "gold": [
+        "pods_autoscale.html#1"
+      ],
+      "gold_rank_dense": 1,
+      "gold_rank_hybrid": 1,
+      "gold_rank_hybrid_reranked": 2
+    },
+    {
+      "id": 6,
+      "gold": [
+        "pods_autoscale.html#1"
+      ],
+      "gold_rank_dense": 1,
+      "gold_rank_hybrid": 1,
+      "gold_rank_hybrid_reranked": 1
+    },
+    {
+      "id": 7,
+      "gold": [
+        "job_management.html#1"
+      ],
+      "gold_rank_dense": 1,
+      "gold_rank_hybrid": 1,
+      "gold_rank_hybrid_reranked": 2
+    },
+    {
+      "id": 8,
+      "gold": [
+        "job_management.html#1"
+      ],
+      "gold_rank_dense": 1,
+      "gold_rank_hybrid": 1,
+      "gold_rank_hybrid_reranked": 1
+    },
+    {
+      "id": 9,
+      "gold": [
+        "job_management.html#0"
+      ],
+      "gold_rank_dense": 1,
+      "gold_rank_hybrid": 1,
+      "gold_rank_hybrid_reranked": 1
+    },
+    {
+      "id": 10,
+      "gold": [
+        "cronjobs.docx#0"
+      ],
+      "gold_rank_dense": 6,
+      "gold_rank_hybrid": 1,
+      "gold_rank_hybrid_reranked": 2
+    },
+    {
+      "id": 11,
+      "gold": [
+        "cronjobs.docx#1"
+      ],
+      "gold_rank_dense": 1,
+      "gold_rank_hybrid": 1,
+      "gold_rank_hybrid_reranked": 3
+    },
+    {
+      "id": 12,
+      "gold": [
+        "cronjobs.docx#0"
+      ],
+      "gold_rank_dense": 5,
+      "gold_rank_hybrid": 1,
+      "gold_rank_hybrid_reranked": 1
+    },
+    {
+      "id": 13,
+      "gold": [
+        "monitor_job.docx#0"
+      ],
+      "gold_rank_dense": 2,
+      "gold_rank_hybrid": 2,
+      "gold_rank_hybrid_reranked": 1
+    },
+    {
+      "id": 14,
+      "gold": [
+        "monitor_job.docx#2"
+      ],
+      "gold_rank_dense": 11,
+      "gold_rank_hybrid": 2,
+      "gold_rank_hybrid_reranked": 2
+    },
+    {
+      "id": 15,
+      "gold": [
+        "monitor_job.docx#1"
+      ],
+      "gold_rank_dense": 1,
+      "gold_rank_hybrid": 1,
+      "gold_rank_hybrid_reranked": 1
+    }
+  ]
+}
