@@ -25,5 +25,5 @@ class Settings:
     # Ingestion
     CHUNK_MAX_CHARS = 1500
     GUARD_MODEL = "qwen/qwen3.8-27b"
-
+    RETRIEVAL_MODE = os.getenv("RETRIEVAL_MODE", "dense_rerank")   # dense_rerank | hybrid | hybrid_rerank
 settings = Settings()

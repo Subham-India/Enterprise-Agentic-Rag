@@ -17,7 +17,9 @@ def main():
     labels = [l for l in json.loads(Path("evals/passage_labels.json").read_text(encoding="utf-8"))
               if l["gold_chunks"]]
     totals = {c: {"hit": 0, "recall": 0.0, "rr": 0.0} for c in CONFIGS}
-    pool = {"dense": 0.0, "hybrid": 0.0}   # share of gold chunks that make it into the 20 candidates
+    off_file = {c: 0 for c in CONFIGS}   # chunks that come from a file other than the expected one
+    sizes = {c: 0 for c in CONFIGS}      # how many chunks each setup returns
+    pool = {"dense": 0.0, "hybrid": 0.0}
     rows = []
 
     for l in labels:
@@ -39,6 +41,8 @@ def main():
             totals[name]["hit"] += hit
             totals[name]["recall"] += recall
             totals[name]["rr"] += rr
+            off_file[name] += sum(1 for i in ids if not i.startswith(l["file"] + "#"))
+            sizes[name] += len(ids)
         pool["dense"] += len(set(dense_ids) & gold) / len(gold)
         pool["hybrid"] += len(set(hyb_ids) & gold) / len(gold)
 
@@ -56,12 +60,15 @@ def main():
         print(f"{r['id']:>3}  {f(r['gold_rank_dense']):>5}  {f(r['gold_rank_hybrid']):>6}  {f(r['gold_rank_hybrid_reranked']):>13}")
 
     print(f"\nCandidate pool recall@20:  dense {pool['dense'] / n:.2f}   hybrid {pool['hybrid'] / n:.2f}")
-    print(f"\n{'config':<30} {'hit':>5} {'recall':>7} {'MRR':>6}")
+    print(f"\n{'config':<30} {'hit':>5} {'recall':>7} {'MRR':>6} {'off-file':>9} {'chunks':>7}")
     summary = {}
     for name, t in totals.items():
-        summary[name] = {"hit": t["hit"] / n, "recall": t["recall"] / n, "MRR": t["rr"] / n}
+        summary[name] = {"hit": t["hit"] / n, "recall": t["recall"] / n, "MRR": t["rr"] / n,
+                         "off_file_chunks": off_file[name] / n, "avg_chunks": sizes[name] / n}
         s = summary[name]
-        print(f"{name:<30} {s['hit']:>5.2f} {s['recall']:>7.2f} {s['MRR']:>6.2f}")
+        print(f"{name:<30} {s['hit']:>5.2f} {s['recall']:>7.2f} {s['MRR']:>6.2f} "
+              f"{s['off_file_chunks']:>9.2f} {s['avg_chunks']:>7.2f}")
+    print("\noff-file = average number of chunks per question that come from a different file than the expected one")
 
     out = Path("evals/results") / f"hybrid_ablation_{datetime.now():%Y%m%d_%H%M%S}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
