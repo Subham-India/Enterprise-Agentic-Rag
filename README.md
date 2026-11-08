@@ -1,21 +1,78 @@
-# Agentic RAG Assistant with Guardrails and Evaluation
+<h1 align="center">🤖 Agentic RAG Assistant</h1>
 
-A document Q&A assistant that answers questions about Kubernetes and Databricks job automation from a small document set. It routes each message through a safety gate and a planner, retrieves with hybrid search (dense + BM25), and returns cited answers. The project also includes an evaluation suite that was used to find and fix real problems in the system.
+<p align="center">
+  <b>A document Q&A assistant with hybrid search, layered guardrails and a built-in evaluation suite, answering questions about Kubernetes and Databricks job automation.</b>
+</p>
 
-<!-- TODO: add a screenshot, e.g. docs/screenshot.png -->
-<!-- ![Chat UI](docs/screenshot.png) -->
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/FastAPI-REST_API-009688?logo=fastapi&logoColor=white" alt="FastAPI">
+  <img src="https://img.shields.io/badge/LangGraph-Agents-1C3C3C" alt="LangGraph">
+  <img src="https://img.shields.io/badge/Qdrant-Vector_DB-DC244C?logo=qdrant&logoColor=white" alt="Qdrant">
+  <img src="https://img.shields.io/badge/Hybrid_Search-BM25_%2B_Dense-E67E22" alt="Hybrid search">
+  <img src="https://img.shields.io/badge/Gemini-Embeddings-4285F4" alt="Gemini">
+  <br>
+  <img src="https://img.shields.io/badge/NeMo-Guardrails-76B900" alt="NeMo Guardrails">
+  <img src="https://img.shields.io/badge/Portkey-LLM_Gateway-5B2EFF" alt="Portkey">
+  <img src="https://img.shields.io/badge/Groq-Inference-F55036" alt="Groq">
+  <img src="https://img.shields.io/badge/JavaScript-Chat_UI-F7DF1E?logo=javascript&logoColor=black" alt="JavaScript">
+</p>
 
-## Features
+---
+
+## 📑 Table of Contents
+
+- [Overview](#-overview)
+- [Screenshots](#-screenshots)
+- [Features](#-features)
+- [How It Works](#-how-it-works)
+- [Architecture](#-architecture)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Evaluation](#-evaluation)
+- [Known Limitations](#-known-limitations)
+- [Credits](#-credits)
+- [License](#-license)
+
+---
+
+## 📖 Overview
+
+This assistant answers questions about Kubernetes and Databricks job automation from a small document set. Each message passes through a safety gate and a planner, then retrieves with hybrid search (dense + BM25), and returns a cited answer. The project also includes an evaluation suite that was used to find and fix real problems in the system.
+
+---
+
+## 📸 Screenshots
+
+<!-- TODO: add screenshots, e.g. docs/chat.png -->
+<!-- ![Chat UI](docs/chat.png) -->
+
+---
+
+## ✨ Features
 
 - **Ingestion:** PDF, HTML, DOCX, PPTX and TXT loaders, paragraph chunking (max 1,500 characters), Gemini embeddings, Qdrant Cloud. Stable chunk IDs make re-ingestion safe.
 - **Retrieval:** dense search, a FlashRank reranker, and hybrid search (dense + BM25, fused with reciprocal rank fusion). A `RETRIEVAL_MODE` setting switches between them.
-- **Agent (LangGraph):** a planner routes each message to `chat`, `search` or `off_topic`. It rewrites only follow-up questions. The responder answers only from retrieved context, cites sources as `[n]`, and says so when the answer is not in the documents. Memory is kept per conversation (`thread_id`).
+- **Agent (LangGraph):** a planner routes each message to `chat`, `search` or `off_topic` and rewrites only follow-up questions. The responder answers only from retrieved context, cites sources as `[n]`, and says so when the answer is not in the documents. Memory is kept per conversation (`thread_id`).
 - **Guardrails:** a NeMo Guardrails gate (jailbreaks, system-prompt extraction, harmful requests, off-topic) plus the planner's scope check as a second layer.
 - **LLM gateway:** Portkey with retries on 429/503 and a fallback model.
 - **API and UI:** FastAPI backend and an HTML/CSS/JS chat page that shows the route, rewritten search query and sources for each answer.
-- **Evaluation suite:** retrieval, guardrails, end-to-end behaviour and an LLM judge (details below).
+- **Evaluation suite:** retrieval, guardrails, end-to-end behaviour and an LLM judge.
 
-## Architecture
+---
+
+## 🔄 How It Works
+
+1. A message arrives and the **NeMo gate** checks it for jailbreaks, prompt extraction, harmful requests and off-topic content.
+2. The **planner** classifies it as chat, search or off-topic. For a follow-up question it rewrites the message so it stands alone.
+3. The **retriever** fetches the best chunks with hybrid search, or dense search plus reranking, depending on `RETRIEVAL_MODE`.
+4. The **responder** answers only from those chunks with `[n]` citations, or says it could not find the answer.
+5. The **chat page** shows the answer together with the route, the rewritten query and the sources.
+
+---
+
+## 📐 Architecture
 
 ```mermaid
 flowchart LR
@@ -29,13 +86,47 @@ flowchart LR
     A --> O["Cited answer"]
 ```
 
-## Tech stack
+---
 
-Python 3.13, LangGraph, FastAPI, Qdrant, Gemini embeddings, fastembed (BM25), FlashRank, NeMo Guardrails, Portkey (gateway to Groq models), JavaScript.
+## 🧰 Tech Stack
 
-## Setup
+| Layer | Technology |
+|---|---|
+| Language | Python 3.13, JavaScript |
+| Agent framework | LangGraph |
+| API | FastAPI |
+| Vector database | Qdrant (dense vectors + BM25 sparse vectors) |
+| Embeddings | Gemini embeddings; fastembed for BM25 |
+| Reranking | FlashRank |
+| Guardrails | NeMo Guardrails |
+| LLM gateway | Portkey, routing to Groq models |
+| Frontend | HTML, CSS, JavaScript |
+
+---
+
+## 📁 Project Structure
+
+```
+app/
+  agents/              LangGraph graph, state, planner / retriever / responder nodes
+  gateway/             Portkey LLM client
+  guardrails/          NeMo rails (Colang rules) and gate
+  ingestion/           loaders, chunking, ingestion CLI
+  services/retrieval/  embeddings, Qdrant, reranker, dense + hybrid search, hybrid builder
+  config.py            settings from .env
+  main.py              FastAPI app (also serves web/)
+web/                   chat UI (HTML, CSS, JavaScript)
+evals/                 golden dataset, passage labels, eval scripts, saved results
+DATA/                  sample documents
+```
+
+---
+
+## 🚀 Getting Started
 
 These commands are for Windows PowerShell. `requirements.txt` was generated on Windows, so it may need adjusting on Linux or macOS. NeMo Guardrails depends on a package that may need the Microsoft C++ Build Tools to install on Windows.
+
+### 1. Install
 
 ```powershell
 git clone <TODO: your repo URL>
@@ -45,7 +136,7 @@ python -m venv venv
 python -m pip install -r requirements.txt
 ```
 
-### Accounts and keys
+### 2. Accounts and keys
 
 | Service | Used for |
 |---|---|
@@ -69,7 +160,7 @@ In Portkey, add Groq as two providers (for example slugs `rag` and `rag2`) and s
 
 Provider model names change over time (Groq retired its Llama models in August 2026), so check the current list.
 
-### `.env`
+### 3. Configure `.env`
 
 ```env
 GEMINI_API_KEY=...
@@ -82,7 +173,7 @@ GROQ_SLUG_2=rag2
 RETRIEVAL_MODE=hybrid    # dense_rerank | hybrid | hybrid_rerank
 ```
 
-### Index the documents
+### 4. Index the documents
 
 ```powershell
 python -m app.ingestion.processor DATA\true_data --wipe
@@ -92,7 +183,7 @@ python -m app.services.retrieval.build_hybrid
 
 The last command copies the vectors into a second collection and adds BM25 vectors, so hybrid search works. Re-run it whenever you re-ingest documents.
 
-### Run
+### 5. Run
 
 ```powershell
 uvicorn app.main:app --port 8000
@@ -110,7 +201,9 @@ Open http://127.0.0.1:8000. Restart the server after changing `.env`.
 
 Returns `answer`, `route` (`search`, `chat`, `off_topic` or `guardrail`), `search_query`, `sources` and `thread_id`. `GET /health` returns `{"status": "ok"}`.
 
-## Evaluation
+---
+
+## 🧪 Evaluation
 
 The document set has 6 target documents (74 chunks) plus 271 chunks from unrelated papers as distractors. The test sets are small and were written by the author, so treat the numbers as indicative.
 
@@ -150,23 +243,9 @@ Hybrid-only was identical across two runs. Differences of about 0.03 between run
 5. **Hybrid search ranks better than dense search.** Both return the answer chunk within their top 20, but hybrid places it higher (MRR 0.90 against 0.79 for the previous default). The reranker helped dense results and did not help hybrid results.
 6. **The slowness was mostly a rate limit.** Groq's free tier allows 8,000 tokens per minute per model. Measured on 3 sample questions, switching NeMo to single-call mode cut the gate from 3 LLM calls (about 2,400-3,200 tokens) to 1 call (about 860-890 tokens), and total tokens per question from about 4,800-6,500 to about 3,300-4,000.
 
-## Project layout
+---
 
-```
-app/
-  agents/            LangGraph graph, state, planner / retriever / responder nodes
-  gateway/           Portkey LLM client
-  guardrails/        NeMo rails (Colang rules) and gate
-  ingestion/         loaders, chunking, ingestion CLI
-  services/retrieval/  embeddings, Qdrant, reranker, dense + hybrid search, hybrid builder
-  config.py          settings from .env
-  main.py            FastAPI app (also serves web/)
-web/                 chat UI (HTML, CSS, JavaScript)
-evals/               golden dataset, passage labels, eval scripts, saved results
-DATA/                sample documents
-```
-
-## Known limitations
+## 🚧 Known Limitations
 
 - **Small, author-written test sets** (13-30 cases). One case moves a metric by 3-8 points, and the sets were partly written with knowledge of the system's rules, so scores are optimistic.
 - **The judge is uncalibrated,** and the guardrail and end-to-end numbers above predate the latest changes.
@@ -179,12 +258,16 @@ DATA/                sample documents
 - **No unit tests, CI, tracing or deployment yet.**
 - **Free-tier privacy:** don't index confidential documents while using free-tier APIs.
 
-## Credits
+---
+
+## 🙏 Credits
 
 Started from the open-source "8hr-MARATHON" project (TODO: link to the original repo), and reused its overall idea, the sample documents and the 15-question golden set. Changes in this version include the model setup (its Llama models were retired), domain-specific guardrail rules, the scope fix, hybrid retrieval, passage-level evaluation, the LLM-judge setup, the single-call gate and an HTML chat UI in place of Streamlit.
 
 The sample documents in `DATA/` come from the original project and may be third-party material. Check their licences before redistributing them.
 
-## License
+---
+
+## 📄 License
 
 TODO: add a LICENSE file.
